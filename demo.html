@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Console X</title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html { background-color:#1c1a18  }
+        body { margin:30px; height:100%; font-size:100%; min-block-size:100%; line-height:1; color:rgb(211,207,201); font-family:system-ui,-apple-system,sans-serif; font-size:calc(18px + 6 * ((100vw - 300px) / (1600 - 300))) }
+    </style>
+	<meta name="robots" content="none">
+</head>
+<body>
+
+<h1>Console X</h1>
+
+<p>Open console in devtools (F12)</p>
+
+<script>
+
+function ConsoleX(prefix, css) { // class
+
+  css = css || 'background:#338811;color:white;padding:0 8px'; // default
+
+  function processArgs() {
+    var args = Array.prototype.slice.call(arguments); // converts Arguments to Array
+    args.shift(); // remove console method (log, info, warn)
+    args.unshift('%c' + prefix, css); // adds custom css and prefix at the beginning
+    return args;
+  }
+
+  function handler(type) {
+    return console[type].apply(console, processArgs.apply(this, arguments));
+  }
+
+  // export public methods: .info(), .warn(), etc (maybe add 'error')
+  ['log', 'info', 'warn'].forEach(function(type) {
+    this[type] = handler.bind(handler, type);
+  }, this);
+
+}
+
+var css = 'background:#ffcc00;color:black;padding:0 8px';
+var _console = new ConsoleX('Prefix', css);
+
+_console.log('Default');
+
+_console.warn('Neo', 'some');
+
+_console.info('Neo');
+
+console.log('Default console');
+
+</script>
+
+</body>
+</html>
